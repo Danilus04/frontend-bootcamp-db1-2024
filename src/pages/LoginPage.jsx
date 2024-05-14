@@ -20,6 +20,7 @@ function LoginPage() {
   const [formValues, setFormValues] = useState({});
   const [loading, setLoading] = useState(false);
 
+  //console.log(formValues);
   const handleLogin = async () => {
     try {
       setLoading(true);
@@ -28,7 +29,18 @@ function LoginPage() {
 
       if (!email?.valid || !senha?.valid) return;
 
-      // TODO: implementar
+      const response = await axios.post('/users/login', {
+        email: email.value,
+        password: senha.value,
+      });
+
+      const { token } = response.data;
+
+      LocalStorageHelper.setToken(token);
+
+      navigate('/');
+
+      
     } catch (error) {
       console.warn(error);
       const { response } = error;
@@ -42,6 +54,7 @@ function LoginPage() {
         });
       }
     } finally {
+      
       setLoading(false);
     }
   };

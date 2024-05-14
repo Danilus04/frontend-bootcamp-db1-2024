@@ -29,7 +29,14 @@ function TaskCreatePage() {
     try {
       setLoading(true);
 
-      // TODO: implementar
+      const response = await axios.get(`/tasks/${taskId}`);
+
+      setFormValues({
+        titulo: {
+          value: response.data.title,
+          valid: true,
+        },
+      });
     } catch (error) {
       console.warn(error);
       Modal.error({
@@ -56,11 +63,29 @@ function TaskCreatePage() {
 
       if (!titulo?.valid) return;
 
-      // TODO: implementar
+      if (taskId) {
+        // editando
+        await axios.patch(`/tasks/${taskId}`, {
+          title: titulo.value,
+        });
+        notification.success({
+          message: 'Tarefa editada com sucesso!',
+        });
+      } else {
+        // cadastrando
+        await axios.post('/tasks', {
+          title: titulo.value,
+        });
+        notification.success({
+          message: 'Tarefa criada com sucesso!',
+        });
+      }
+
+      navigate('/');
     } catch (error) {
       console.warn(error);
       Modal.error({
-        title: 'Não foi cadastrar-se, tente novamente mais tarde.',
+        title: 'Não foi possível cadastrar a tarefa, tente novamente mais tarde.',
       });
     } finally {
       setLoading(false);
@@ -73,7 +98,7 @@ function TaskCreatePage() {
       <Space direction="vertical" style={{ display: 'flex' }}>
 
         <Row justify="center">
-          <Col xs={23} sl={14} md={12} lg={10} xl={8}>
+          <Col xs={23} sm={14} md={12} lg={10} xl={8}>
 
             <Form layout="vertical">
               <InputText
