@@ -16,12 +16,12 @@ const { Header, Footer } = Layout;
  */
 const MENU_ITEMS = [
   {
-    path: '/tasks',
-    label: 'Minhas tarefas',
+    path: '/product',
+    label: 'Loja',
   },
   {
-    path: '/tasks/new',
-    label: 'Nova tarefa',
+    path: '/favorite',
+    label: 'Meus favoritos',
   },
 ];
 
