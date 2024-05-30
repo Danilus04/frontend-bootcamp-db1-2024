@@ -13,8 +13,9 @@ import {
 const PrivateRoute = lazy(() => import('../components/PrivateRoute'));
 const LoginPage = lazy(() => import('../pages/LoginPage'));
 const SubscriptionPage = lazy(() => import('../pages/SubscriptionPage'));
-const ProductPage = lazy(() => import ('../pages/ProductPage'));
+const ShopPage = lazy(() => import ('../pages/ShopPage'));
 const FavoritePage = lazy(() => import ('../pages/FavoritePage'));
+const ProductDetailPage = lazy(() => import ('../pages/ProductPage'));
 
 const AppLayout = lazy(() => import('./AppLayout'));
 
@@ -28,7 +29,7 @@ function MainLayout() {
           element={(
             <PrivateRoute>
               <AppLayout>
-                <ProductPage/>
+                <ShopPage/>
               </AppLayout>
             </PrivateRoute>
           )}
@@ -43,16 +44,7 @@ function MainLayout() {
             </PrivateRoute>
           )}
         />
-        <Route
-          path="favorite"
-          element={(
-            <PrivateRoute>
-              <AppLayout>
-                <FavoritePage/>
-              </AppLayout>
-            </PrivateRoute>
-          )}
-        />
+        <Route path="/product/:productId" element={<ProductDetailPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/subscription" element={<SubscriptionPage />} />
       </Routes>
