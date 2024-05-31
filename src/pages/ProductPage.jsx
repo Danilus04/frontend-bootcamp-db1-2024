@@ -5,35 +5,39 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
 const { Header } = Layout;
-
 const { Title, Paragraph } = Typography;
+const parcelaMinima = 10;
 
 const calculateInstallments = (price) => {
-    const minInstallmentValue = 10.0;
-    const interestRate = 1.99 / 100;
-    const maxInstallments = Math.floor(price / minInstallmentValue);
-    const installments = [];
-
-    for (let n = 1; n <= maxInstallments; n++) {
-        const installmentValue = price * Math.pow(1 + interestRate, n) / n;
-        if (installmentValue >= minInstallmentValue) {
-            installments.push({ n, installmentValue });
-        }
+    const quantidadeMaximaDeParcelas = Math.floor(price / parcelaMinima);
+    const totalComJuros = price * quantidadeMaximaDeParcelas * 1.0199;
+    const totalDasParcelasComJuros = (totalComJuros / quantidadeMaximaDeParcelas ).toFixed(2);
+    if(quantidadeMaximaDeParcelas === 0 ){
+        return;
+    } else {
+        return `Máximo de parcelas: ${quantidadeMaximaDeParcelas} vezes de R$ ${(totalDasParcelasComJuros/quantidadeMaximaDeParcelas).toFixed(2)} com juros de 1.99% am.`
     }
+    
 
-    return installments;
 };
 
 function ProductDetailPage() {
     const { productId } = useParams();
     const [product, setProduct] = useState(null);
+    const [isFavorite, setIsFavorite] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const requestProduct = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`/product/${productId}`); // Ajuste a URL para o endpoint correto da sua API
-            setProduct(response.data);
+            const productResponse = await axios.get(`/product/${productId}`);
+            setProduct(productResponse.data);
+
+            const favoriteResponse = await axios.get(`/favorite`);
+            const favoriteList = favoriteResponse.data;
+
+            const isFav = favoriteList.some(fav => fav.ProductId == productId);
+            setIsFavorite(isFav);
         } catch (error) {
             console.warn(error);
             Modal.error({
@@ -41,6 +45,29 @@ function ProductDetailPage() {
             });
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleToggleFavorite = async () => {
+        try {
+            if (isFavorite) {
+                await axios.delete(`/favorite/${productId}`);
+                setIsFavorite(false);
+                Modal.success({
+                    title: 'Produto desfavoritado com sucesso!',
+                });
+            } else {
+                await axios.post(`/favorite/${productId}`);
+                setIsFavorite(true);
+                Modal.success({
+                    title: 'Produto favoritado com sucesso!',
+                });
+            }
+        } catch (error) {
+            console.warn(error);
+            Modal.error({
+                title: `Não foi possível ${isFavorite ? 'desfavoritar' : 'favoritar'} o produto, tente novamente mais tarde.`,
+            });
         }
     };
 
@@ -56,19 +83,19 @@ function ProductDetailPage() {
         );
     }
 
-    const installments = calculateInstallments(product.price);
+    const ResultadosJuros = calculateInstallments(product.price);
 
     return (
         <Content style={{ padding: '0 50px' }}>
             <Header style={{ background: '#fff', padding: 0 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 24px' }}>
                     <div>
-                    <Link to="/">
-                        <Button type="primary">Voltar para a Página Principal</Button>
-                    </Link>
+                        <Link to="/">
+                            <Button type="primary">Voltar para a Página Principal</Button>
+                        </Link>
                     </div>
                     <div>
-                    {/* Outros elementos do cabeçalho podem ser adicionados aqui */}
+                        {/* Outros elementos do cabeçalho podem ser adicionados aqui */}
                     </div>
                 </div>
             </Header>
@@ -81,15 +108,16 @@ function ProductDetailPage() {
                         <Paragraph>{product.description}</Paragraph>
                         <Title level={4}>Preço: R$ {product.price.toFixed(2)}</Title>
                         <Paragraph>
-                            Máximo de parcelas: {installments.length} vezes de R$ {installments.length > 0 ? installments[installments.length - 1].installmentValue.toFixed(2) : 0} com juros de 1.99% am.
+                            {ResultadosJuros}
                         </Paragraph>
+                        <Button type="primary" onClick={handleToggleFavorite}>
+                            {isFavorite ? 'Desfavoritar' : 'Favoritar'}
+                        </Button>
                     </Card>
                 </Col>
             </Row>
         </Content>
     );
 }
-
-//TODO: Máximo de parcelas ajustado caso não de para ter nenhuma percela
 
 export default ProductDetailPage;

@@ -1,6 +1,7 @@
 import { Content } from 'antd/es/layout/layout';
 import { Card, Button, List, Modal, Space, Row, Col } from 'antd';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 // Componente de Produto Favorito
@@ -8,10 +9,20 @@ const FavoriteProduct = ({ product, onRemove }) => (
     <Card
         hoverable
         style={{ marginBottom: 16 }}
-        cover={product.imageUrl ? <img alt={product.name} src={product.imageUrl} /> : <div style={{ height: 200, backgroundColor: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Sem Imagem</div>}
+        cover={
+            <Link to={`/product/${product.id}`}>
+                {product.imageUrl ? (
+                    <img alt={product.name} src={product.imageUrl} />
+                ) : (
+                    <div style={{ height: 200, backgroundColor: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        Sem Imagem
+                    </div>
+                )}
+            </Link>
+        }
     >
         <Card.Meta
-            title={product.name}
+            title={<Link to={`/product/${product.id}`}>{product.name}</Link>}
             description={product.description}
         />
         <Button type="primary" danger onClick={() => onRemove(product.id)} style={{ marginTop: 16 }}>
@@ -42,27 +53,24 @@ function FavoritePage() {
 
     const removeFavorite = async (favoriteId) => {
         try {
-          setLoading(true);
-    
-          await axios.delete(`/favorite/${favoriteId}`);
-    
-          await requestFavorite();
+            setLoading(true);
+            await axios.delete(`/favorite/${favoriteId}`);
+            await requestFavorite();
         } catch (error) {
-          console.warn(error);
-          Modal.error({
-            title: 'Não foi possível processar, tente novamente mais tarde.',
-          });
+            console.warn(error);
+            Modal.error({
+                title: 'Não foi possível processar, tente novamente mais tarde.',
+            });
         } finally {
-          setLoading(false);
+            setLoading(false);
         }
-      };
+    };
 
     useEffect(() => {
         requestFavorite();
     }, []);
 
     const handleRemove = async (id) => {
-        // Atualize a lógica para remover o produto dos favoritos conforme necessário.
         await removeFavorite(id);
         setFavorites(favorites.filter(favorite => favorite.Product.id !== id));
     };
