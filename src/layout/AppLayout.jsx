@@ -4,7 +4,6 @@ import {
 import { useCallback, useMemo } from 'react';
 import { useNavigate, matchPath, useLocation } from 'react-router-dom';
 
-import Logo from '../assets/logo-db1-group.png';
 import LocalStorageHelper from '../helpers/localstorage-helper';
 
 import './AppLayout.css';
@@ -63,21 +62,26 @@ function AppLayout({ children }) {
           display: 'flex',
           alignItems: 'center',
           flexWrap: 'nowrap',
+          background: '#262626'
         }}
       >
-        <img
-          src={Logo}
+        <h1
           style={{
-            height: 40,
+            height: 60,
             marginLeft: 16,
             marginRight: 16,
+            background: '#262626',
+            fontSize: '30px',
+            color: 'white'
           }}
-          alt="Logotipo"
-        />
+        >
+         NetXoes 
+        </h1>
 
         <Menu
           style={{
             flex: 1,
+            background: '#262626',
           }}
           selectedKeys={selectedKeys}
           mode="horizontal"

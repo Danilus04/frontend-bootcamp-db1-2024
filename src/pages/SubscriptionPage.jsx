@@ -129,6 +129,7 @@ function SubscriptionPage() {
                 size="large"
                 onClick={handleSubscription}
                 loading={loading}
+                style={{ backgroundColor: '#000000'}}
               >
                 Cadastrar
               </Button>

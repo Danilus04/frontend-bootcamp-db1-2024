@@ -12,34 +12,54 @@ const Product = ({ product, onToggleFavorite }) => (
         style={{ marginBottom: 16 }}
         cover={
             <Link to={`/product/${product.id}`}>
-                {product.imageUrl ? (
-                    <img alt={product.name} src={product.imageUrl} />
-                ) : (
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    maxWidth: '100%', 
+                    height: '300px',
+                }}>
+                    {product.imageUrl ? (
+                    <img 
+                        alt={product.name} 
+                        src={product.imageUrl} 
+                        style={{
+                        maxWidth: '100%', 
+                        maxHeight: '100%',
+                        width: 'auto',
+                        height: 'auto'
+                        }} 
+                    />
+                    ) : (
                     <div
                         style={{
-                            height: 200,
-                            backgroundColor: '#f0f0f0',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: '#f0f0f0',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         }}
                     >
                         Sem Imagem
                     </div>
-                )}
+                    )}
+                </div>
             </Link>
         }
     >
         <Card.Meta
-            title={<Link to={`/product/${product.id}`}>{product.name}</Link>}
+            title={<Link to={`/product/${product.id}`} style={{color: '#000000'}} >
+                    {product.name}
+                </Link>}
             description={`${product.description} - R$ ${product.price}`}
         />
         <Button
             type="primary"
             onClick={() => onToggleFavorite(product.id)}
-            style={{ marginTop: 16 }}
+            style={{ marginTop: 16 , backgroundColor: '#000000'}}
         >
-            {product.isFavorite ? 'Desfavoritar' : 'Favoritar'}
+            {product.isFavorite ? '❤' : '🤍'}
         </Button>
     </Card>
 );

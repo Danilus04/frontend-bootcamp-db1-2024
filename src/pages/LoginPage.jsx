@@ -123,6 +123,7 @@ function LoginPage() {
                 size="large"
                 onClick={handleLogin}
                 loading={loading}
+                style={{ backgroundColor: '#000000'}}
               >
                 Entrar
               </Button>

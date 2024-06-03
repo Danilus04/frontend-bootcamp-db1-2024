@@ -44,7 +44,14 @@ function MainLayout() {
             </PrivateRoute>
           )}
         />
-        <Route path="/product/:productId" element={<ProductDetailPage />} />
+        <Route 
+          path="/product/:productId" 
+          element={(
+            <AppLayout>
+              <ProductDetailPage />
+            </AppLayout>
+          )} 
+        />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/subscription" element={<SubscriptionPage />} />
       </Routes>

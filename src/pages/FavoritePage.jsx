@@ -11,21 +11,47 @@ const FavoriteProduct = ({ product, onRemove }) => (
         style={{ marginBottom: 16 }}
         cover={
             <Link to={`/product/${product.id}`}>
-                {product.imageUrl ? (
-                    <img alt={product.name} src={product.imageUrl} />
-                ) : (
-                    <div style={{ height: 200, backgroundColor: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    maxWidth: '100%', 
+                    height: '300px',
+                }}>
+                    {product.imageUrl ? (
+                    <img 
+                        alt={product.name} 
+                        src={product.imageUrl} 
+                        style={{
+                        maxWidth: '100%', 
+                        maxHeight: '100%',
+                        width: 'auto',
+                        height: 'auto'
+                        }} 
+                    />
+                    ) : (
+                    <div
+                        style={{
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: '#f0f0f0',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        }}
+                    >
                         Sem Imagem
                     </div>
-                )}
+                    )}
+                </div>
             </Link>
         }
     >
         <Card.Meta
-            title={<Link to={`/product/${product.id}`}>{product.name}</Link>}
+            title={<Link to={`/product/${product.id}`} style={{color: '#000000'}}>{product.name}</Link>}
             description={product.description}
         />
-        <Button type="primary" danger onClick={() => onRemove(product.id)} style={{ marginTop: 16 }}>
+        <Button type="primary" danger onClick={() => onRemove(product.id)} style={{ marginTop: 16, backgroundColor: '#000000' }}>
             Remover
         </Button>
     </Card>

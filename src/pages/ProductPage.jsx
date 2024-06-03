@@ -1,8 +1,9 @@
 import { Content } from 'antd/es/layout/layout';
 import { Card, Modal, Row, Col, Typography, Layout, Button } from 'antd';
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
+
 
 const { Header } = Layout;
 const { Title, Paragraph } = Typography;
@@ -17,7 +18,6 @@ const calculateInstallments = (price) => {
     } else {
         return `Máximo de parcelas: ${quantidadeMaximaDeParcelas} vezes de R$ ${(totalDasParcelasComJuros/quantidadeMaximaDeParcelas).toFixed(2)} com juros de 1.99% am.`
     }
-    
 
 };
 
@@ -38,6 +38,7 @@ function ProductDetailPage() {
 
             const isFav = favoriteList.some(fav => fav.ProductId == productId);
             setIsFavorite(isFav);
+
         } catch (error) {
             console.warn(error);
             Modal.error({
@@ -87,22 +88,21 @@ function ProductDetailPage() {
 
     return (
         <Content style={{ padding: '0 50px' }}>
-            <Header style={{ background: '#fff', padding: 0 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 24px' }}>
-                    <div>
-                        <Link to="/">
-                            <Button type="primary">Voltar para a Página Principal</Button>
-                        </Link>
-                    </div>
-                    <div>
-                        {/* Outros elementos do cabeçalho podem ser adicionados aqui */}
-                    </div>
-                </div>
-            </Header>
             <Row justify="center">
                 <Col span={12}>
                     <Card
-                        cover={product.imageUrl ? <img alt={product.name} src={product.imageUrl} /> : <div style={{ height: 400, backgroundColor: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Sem Imagem</div>}
+                        cover={product.imageUrl 
+                            ?
+                                <div 
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',}}
+                                >
+                                    <img alt={product.name} src={product.imageUrl} style={{maxHeight: '70%', maxWidth: '70%'}} /> 
+                                </div>
+
+                            : <div style={{ height: 400, backgroundColor: '#f0f0f0', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Sem Imagem</div>}
                     >
                         <Title level={2}>{product.name}</Title>
                         <Paragraph>{product.description}</Paragraph>
@@ -112,6 +112,9 @@ function ProductDetailPage() {
                         </Paragraph>
                         <Button type="primary" onClick={handleToggleFavorite}>
                             {isFavorite ? 'Desfavoritar' : 'Favoritar'}
+                        </Button>
+                        <Button type="primary" style={{float: 'right'}}>
+                            Adicionar no carrinho
                         </Button>
                     </Card>
                 </Col>
